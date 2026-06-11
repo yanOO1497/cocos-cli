@@ -15,7 +15,7 @@ import { newConsole } from '../../base/console';
 import builderConfig from '../share/builder-config';
 import { createBuilderPlatformMetadataNodes } from '../share/metadata';
 import { configurationRegistry } from '../../configuration';
-import { convertConfigItem, createPropertySchema, ICocosConfigurationPropertySchema } from '../../configuration/script/metadata';
+import { convertConfigItem, createPropertySchema, hasConfigItemShape, ICocosConfigurationPropertySchema } from '../../configuration/script/metadata';
 import { GlobalPaths } from '../../../global';
 import { existsSync, readdirSync } from 'fs';
 import utils from '../../base/utils';
@@ -893,10 +893,14 @@ export class PluginManager extends EventEmitter {
     private toRenderSchema(items: Record<string, IBuilderConfigItem>): Record<string, ICocosConfigurationPropertySchema> {
         const result: Record<string, ICocosConfigurationPropertySchema> = {};
         for (const [key, item] of Object.entries(items)) {
-            if (!item || item.hidden) {
+            // 跳过 hidden 项与非配置项(无合法 type 字段),与配置系统 metadata 的处理保持一致
+            if (!item || item.hidden || !hasConfigItemShape(item)) {
                 continue;
             }
-            result[key] = createPropertySchema(convertConfigItem(item, key));
+            const converted = convertConfigItem(item, key);
+            if (converted) {
+                result[key] = createPropertySchema(converted);
+            }
         }
         return result;
     }
