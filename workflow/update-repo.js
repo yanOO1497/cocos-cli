@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
 
 /**
  * 下载引擎工作流
@@ -83,6 +83,19 @@ class UpdateRepo {
         return fs.existsSync(gitDir);
     }
 
+    /** Select the configured source repository, even when origin is a personal fork. */
+    resolveRemote(targetDir, repo) {
+        const normalize = (url) => url.trim().replace(/^git@([^:]+):/, 'https://$1/').replace(/\.git\/?$/, '').replace(/\/$/, '').toLowerCase();
+        const remotes = execFileSync('git', ['remote'], { cwd: targetDir, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
+        for (const remote of remotes) {
+            const url = execFileSync('git', ['remote', 'get-url', remote], { cwd: targetDir, encoding: 'utf8' });
+            if (normalize(url) === normalize(repo)) {
+                return remote;
+            }
+        }
+        throw new Error(`No remote matches configured repository: ${repo}`);
+    }
+
     /**
      * 更新已存在的仓库
      */
@@ -98,6 +111,7 @@ class UpdateRepo {
         }
 
         try {
+            const remote = this.resolveRemote(targetDir, repo);
             // 询问用户是否还原
             const args = process.argv.slice(2);
             const isForce = args.includes('--force');
@@ -115,13 +129,13 @@ class UpdateRepo {
 
             // 获取远程更新
             console.log('获取远程更新...');
-            this.execCommand('git fetch origin --tags --force', targetDir);
+            this.execCommand(`git fetch ${remote} --tags --force`, targetDir);
 
             // 切换到指定分支或标签并更新
             if (branch) {
                 console.log(`切换到分支并更新: ${branch}`);
                 this.execCommand(`git checkout ${branch}`, targetDir);
-                this.execCommand(`git reset --hard origin/${branch}`, targetDir);
+                this.execCommand(`git reset --hard ${remote}/${branch}`, targetDir);
             } else if (tag) {
                 console.log(`切换到标签: ${tag}`);
                 this.execCommand(`git checkout ${tag}`, targetDir);
@@ -129,7 +143,7 @@ class UpdateRepo {
                 // 如果没有指定分支或标签，更新当前分支
                 console.log('更新当前分支到最新...');
                 const currentBranch = this.execCommand('git rev-parse --abbrev-ref HEAD', targetDir).toString().trim();
-                this.execCommand(`git reset --hard origin/${currentBranch}`, targetDir);
+                this.execCommand(`git reset --hard ${remote}/${currentBranch}`, targetDir);
             }
 
             console.log(`仓库 ${key} 更新完成`);

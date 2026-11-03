@@ -8,5 +8,65 @@
         "repo": "https://github.com/cocos/cocos-engine-external.git",
         "dist": "packages/engine/native/external",
         "tag": "v4.0.0-10"
+    },
+    "wechat": {
+        "repo": "git@github.com:cocos/cocos-pal-wechat.git",
+        "dist": "packages/platforms/wechat",
+        "branch": "main"
+    },
+    "wechat-playable": {
+        "repo": "git@github.com:cocos/cocos-pal-wechat-playable.git",
+        "dist": "packages/platforms/wechat-playable",
+        "branch": "main"
+    },
+    "bytedance": {
+        "repo": "git@github.com:cocos/cocos-pal-bytedance.git",
+        "dist": "packages/platforms/bytedance",
+        "branch": "main"
+    },
+    "sud": {
+        "repo": "git@github.com:cocos/cocos-pal-sud.git",
+        "dist": "packages/platforms/sud",
+        "branch": "main"
+    },
+    "sudv2": {
+        "repo": "git@github.com:cocos/cocos-pal-sudv2.git",
+        "dist": "packages/platforms/sudv2",
+        "branch": "main"
+    },
+    "alipay": {
+        "repo": "git@github.com:cocos/cocos-pal-alipay.git",
+        "dist": "packages/platforms/alipay",
+        "branch": "main"
+    },
+    "taobao": {
+        "repo": "git@github.com:cocos/cocos-pal-taobao.git",
+        "dist": "packages/platforms/taobao",
+        "branch": "main"
+    },
+    "oppo": {
+        "repo": "git@github.com:cocos/cocos-pal-oppo.git",
+        "dist": "packages/platforms/oppo",
+        "branch": "main"
+    },
+    "vivo": {
+        "repo": "git@github.com:cocos/cocos-pal-vivo.git",
+        "dist": "packages/platforms/vivo",
+        "branch": "main"
+    },
+    "huawei": {
+        "repo": "git@github.com:cocos/cocos-pal-huawei.git",
+        "dist": "packages/platforms/huawei",
+        "branch": "main"
+    },
+    "honor": {
+        "repo": "git@github.com:cocos/cocos-pal-honor.git",
+        "dist": "packages/platforms/honor",
+        "branch": "main"
+    },
+    "meta": {
+        "repo": "git@github.com:cocos/cocos-pal-meta.git",
+        "dist": "packages/platforms/meta",
+        "branch": "main"
     }
 }

@@ -12,5 +12,24 @@ const utils = require('./utils');
 
     await utils.runCommand('npm run install:engine');
 
+    const platforms = [
+        'wechat',
+        'wechat-playable',
+        'bytedance',
+        'sud',
+        'sudv2',
+        'alipay',
+        'taobao',
+        'oppo',
+        'vivo',
+        'huawei',
+        'honor',
+        'meta',
+    ];
+    for (const platform of platforms) {
+        await utils.runCommand(`npm i --prefix ./packages/platforms/${platform}`);
+        await utils.runCommand(`npm run build --prefix ./packages/platforms/${platform}`);
+    }
+
     console.log('\n初始化完成\n');
 })();
